@@ -1,0 +1,67 @@
+
+syntax = "proto3";
+
+option go_package = "/Users/noamweiler/GolandProjects/SensorServer";
+
+package SensorServer;
+
+
+/*
+  client do 3 things:
+  connect - if succeeded can continue (can connect once with yochbad/123)
+  getinfo - as specified in the project
+  disconnect - if connected
+ */
+service ClientInfo {
+  rpc ConnectClient (ConnReq) returns (ConnRes){}
+  rpc GetInfo (InfoReq) returns (InfoRes){}
+  rpc DisconnectClient (DisConnReq) returns (ConnRes){}
+
+}
+
+message ConnReq {
+  string userName = 1;
+  string password = 2;
+}
+
+message DisConnReq {}
+
+//used for both connect and disconnect
+message ConnRes {
+  string res = 1;
+}
+
+message InfoReq{
+  string sensorName = 1;
+  int32 dayBefore = 2;
+}
+
+message InfoRes{
+  string responce = 1;
+}
+
+/*
+  Implementation of sensor
+  Do 2 things:
+  1)  connect to server
+  2)  send measures
+*/
+
+service SensorStream {
+  rpc ConnectSensor (ConnSensorReq) returns (ConnSensorRes){}
+  rpc SensorMeasure (measure) returns (measureRes){}
+  //  rpc Sensormeasure (stream measure) returns (measureRes){}
+}
+
+message ConnSensorReq {}
+
+message ConnSensorRes {
+  string serial = 1;
+}
+
+message measure{
+  int32 m = 1;
+  string serial = 2;
+}
+
+message measureRes{}
